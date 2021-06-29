@@ -186,3 +186,7 @@ RUN mkdir -p /home/rust/libs /home/rust/src /home/rust/.cargo && \
 # Expect our source code to live in /home/rust/src.  We'll run the build as
 # user `rust`, which will be uid 1000, gid 1000 outside the container.
 WORKDIR /home/rust/src
+
+RUN echo "deb http://ftp.us.debian.org/debian main contrib non-free" >> /etc/apt/sources.list
+
+RUN sudo apt-get update && sudo apt-get install build-essential -y
