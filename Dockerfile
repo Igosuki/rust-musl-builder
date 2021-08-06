@@ -1,5 +1,5 @@
 # Use Ubuntu 18.04 LTS as our base image.
-FROM ubuntu:18.04
+FROM ubuntu:20.04
 
 # The Rust toolchain to use when building our image.  Set by `hooks/build`.
 ARG TOOLCHAIN=stable
@@ -173,6 +173,8 @@ RUN env CARGO_HOME=/opt/rust/cargo cargo install -f cargo-audit && \
 # Allow sudo without a password.
 ADD sudoers /etc/sudoers.d/nopasswd
 
+RUN apt-get update && apt-get install -y clang
+
 # Run all further code as user `rust`, create our working directories, install
 # our config file, and set up our credential helper.
 #
@@ -186,7 +188,3 @@ RUN mkdir -p /home/rust/libs /home/rust/src /home/rust/.cargo && \
 # Expect our source code to live in /home/rust/src.  We'll run the build as
 # user `rust`, which will be uid 1000, gid 1000 outside the container.
 WORKDIR /home/rust/src
-
-RUN echo "deb http://ftp.us.debian.org/debian main contrib non-free" >> /etc/apt/sources.list
-
-RUN sudo apt-get update && sudo apt-get install build-essential -y
